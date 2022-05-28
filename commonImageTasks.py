@@ -70,4 +70,4 @@ def listImages(imglst, cols = 6):
         except ZeroDivisionError:
             print(len(aiptekfiles), "%", cols)
         item += 1
-
+    return

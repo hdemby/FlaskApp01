@@ -48,9 +48,18 @@ if __name__ == '__main__':
     "run the code"
     imglst = os.listdir(AIPTEKPATH)
     listImages(imglst)
+    print()
     image = input("Enter the Aiptek 3D image that you want to convert to Lume Pad '.2xPICT1' format: ")
     # image = "PICT0026.jpg"
     new_image = doAiptek(image)
     new_image.show()
+    while True:
+        ans = input("flip it?: ")
+        if ans in ['y','Y']:
+            new_image = flipStereoImage(new_image)
+            new_image.show()
+        else:
+            break
     if input("save the new stereo image?: ") in ('y', 'Y'):
+        print(f"Image saved at:")
         saveImage(image, new_image, AIPTEKOUT)

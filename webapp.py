@@ -1,5 +1,7 @@
 from flask import Flask, redirect, url_for
 from flask import render_template, request, session
+from flask import flash
+
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -32,6 +34,9 @@ def user():
 
 @app.route("/logout")
 def logout():
+    if "user" in session:
+        usr = session["user"]
+        flash(f"Logout for {usr} was successful.", "info")
     session.pop("user", None)
     return redirect(url_for("login"))
 

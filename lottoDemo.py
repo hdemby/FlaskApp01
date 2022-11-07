@@ -57,21 +57,37 @@ if __name__ == "__main__":
     print("Drawing Result: ", winningTkt)
     chk_ticket(myplays, winningTkt)
 
-# set a budget
-# Create your ticket:
-#   enter your own number or get a randomly generated ticket:
-#     - ticket.append([required # of ball values], powerball)
-# calculate cost:
-#  cost = (costPerPlay + powerplay) * len(ticket)
+## Lottery Game Simulation
+----------------------------
+# -- Parameters --:
+# RandomBallRange ==> 1-69
+# NumberBalls ==> 5
+# PowerBallRange == 1-26
+# PowerPlayCost ==> 1
+#
+# -- Game Play --
+# set a budget ==> budget
+# Create your tickets:
+------------------------
+#   get number of plays desired:
+#   for each play:
+#       enter your own numbers and powerball or generate random ticket:
+#   calculate cost:
+#       choose powerplay and number of drawings
+#       cost = (costPerPlay + powerplay) * len(ticket) * drawings
 #  budget -= cost
-
-# for each play in ticket:
-    # get
-    # get powerball
-    # add powerplay
-    # add times to play
+#
+# While budget > 0:
+#   winnings = 0
+#   do drawing for winning ticket
+#   for each play in ticket:
+#      check ticket for jackpot
+#      check ticket for powerball
+#      add result to winnings
+#
 # report ticket and cost:
-# play a drawing:
+#    budget += winnings
+#
 
 
 

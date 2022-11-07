@@ -24,7 +24,9 @@ class users(db.Model):
 
 @app.route("/")
 def fauxhome():
-    return "Hello! Hi there! This is <h1>Flask</h1>"
+    welcome = "Hello! Hi there! This is <h1>Flask</h1>"
+    instruct = "\nclick this link to login : <a href='http://127.0.0.1:5000/login'>Login</a>"
+    return welcome + instruct
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

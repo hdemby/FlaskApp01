@@ -65,7 +65,7 @@ def getIntValue(query):
     return int(value)
 
 def getBoolValue(query):
-    "return a boolean value for the request with 'False' returned for no entrys"
+    "return a boolean value for the request with 'False' returned for no entry"
     value = True and input(query).lower() in ['y', 'yes'] or False
     return value
 

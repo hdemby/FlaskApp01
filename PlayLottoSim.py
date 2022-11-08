@@ -129,13 +129,18 @@ def showTkt(mypicks):
 
 def chk_ticket(myTkt, winningTkt):
     "return results of game drawing"
+    payouts = PAYOUTS
     for pick in myTkt:
-        chkJackpot(pick, winningTkt)
-        powerball = chkPowerball(pick, winningTkt[1])
-        matches = chkBallMatches(pick, winningTkt)
-        print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
+        if chkJackpot(pick, winningTkt):
+            print("YOU WON THE JACKPOT")
+            winnings = payouts[(5, True)]
+        else:
+            powerball = chkPowerball(pick, winningTkt[1])
+            matches = chkBallMatches(pick, winningTkt)
+            print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
               "winnings: $" + str(winnings(len(matches), powerball)))
-    return winnings(len(matches), powerball))
+            winnings = payouts[(len(matches), powerball)]
+    return )
 
 def main():
     "Play the game..."

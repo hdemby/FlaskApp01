@@ -46,10 +46,12 @@ def getTicket(plays = 1):
     mypicks = []
     while plays:
         print("%s plays left.." % plays)
-        picks = input("enter list of 5 non-repeating numbers between 1 and 69: ")
-        picks = picks and set(eval(picks)) or get_white_balls()
-        pball = input("enter a powerball value between 1 and 26: ")
-        pball = pball and int(pball) or get_Powerball()
+        picks = getPicks()
+        #picks = input("enter list of 5 non-repeating numbers between 1 and 69: ")
+        #picks = picks and set(eval(picks)) or get_white_balls()
+        pball = getIntValue("enter a powerball value between 1 and 26: ")
+        #pball = input("enter a powerball value between 1 and 26: ")
+        #pball = pball and int(pball) or get_Powerball()
         mypicks.append([picks, pball])
         plays -= 1
     return mypicks
@@ -57,7 +59,7 @@ def getTicket(plays = 1):
 def showTkt(mypicks):
     "display current ticket"
     for play in mypicks:
-        print(play)
+        print("Balls:{:<24s} Powerball:{}".format(str(sorted(list(play[0]))), play[1]))
     return
 
 def chk_ticket(myTkt, winningTkt):

@@ -27,10 +27,23 @@ from chkLottoPick import *
 ##======================== No changes beneath this line =====================
 # -- Game Play --
 # set a budget ==> budget
-def getTicket(plays = 5):
+
+def getPicks(balls = BALLS, hi = HI):
+    "return set # of ball values in defined range"
+    picks = set()
+    print(f"Pick {balls} numbers between 1 and {hi}: ")
+    while len(picks) < balls:
+        pick = getIntValue("?: ")
+        if 1 <= pick <= hi:
+            picks.add(pick)
+            print(picks)
+        else:
+            print("Your value is not in the range 1 - %s. Please try again..." % hi)
+    return picks
+
+def getTicket(plays = 1):
     "generate a lottery ticket; default 5 plays"
     mypicks = []
-    plays = 5
     while plays:
         print("%s plays left.." % plays)
         picks = input("enter list of 5 non-repeating numbers between 1 and 69: ")
@@ -75,6 +88,7 @@ if __name__ == "__main__":
     plays = getValue("How many games do you want to play?: ")
     powerplay = getBoolValue("Do you want to use the 'Powerplay'?: ") and 1 or 0
     if (playcost + powerplay) * plays < budget:
+
 
     myplays = getTicket()
     showTkt(myplays)

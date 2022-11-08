@@ -24,8 +24,9 @@ import random
 BALLS = 5
 LO = 1
 HI = 69
-PBMAX = 26
-PowerPlayCost = 1
+PBMAX = 27
+PLAYCOST = 2
+PPLAYCOST = 1
 
 JACKPOT = 1900000000
 PAYOUTS = {
@@ -46,6 +47,10 @@ PAYOUTS = {
 ##======================== No value changes beneath this line =====================
 ## --- MODEL ---
 # These functions create and populate the objects for this program
+def get_ball_value(lo = LO, hi = HI):
+    "return a random number in the specified range"
+    return random.randint(lo, hi)
+
 
 def get_white_balls(balls = BALLS, lo = LO, hi = HI):
     "returns the number of requested random balls in the range specified"
@@ -67,7 +72,7 @@ def getIntValue(query):
     "return an integer value for a request with rejection of no values entered"
     value = None
     while not value:
-        value = True and 0 or input("%s: " % query)
+        value = True and 0 or input("%s" % query)
     return int(value)
 
 def getBoolValue(query):
@@ -108,6 +113,16 @@ def getPicks(balls = BALLS, hi = HI):
             print("Your value is not in the range 1 - %s. Please try again..." % hi)
     return picks
 
+def getPBall():
+    "return a powerball value"
+    while True:
+        pb_pick = getIntValue("...now enter a powerball value between 1 and 26: ")
+        if pb_pick in range(1,PBMAX):
+            break
+        else:
+            print("Value out of range. Try again...")
+    return pb_pick
+
 ## --- VIEW ---
 # These functions accept user input and display results
 def getTicket(plays = 1):
@@ -116,7 +131,7 @@ def getTicket(plays = 1):
     while plays:
         print("%s plays left.." % plays)
         picks = getPicks()
-        pball = getIntValue("enter a powerball value between 1 and 26: ")
+        pball = getPBall()
         mypicks.append([picks, pball])
         plays -= 1
     return mypicks
@@ -130,6 +145,7 @@ def showTkt(mypicks):
 def chk_ticket(myTkt, winningTkt):
     "return results of game drawing"
     payouts = PAYOUTS
+    winnings = 0
     for pick in myTkt:
         if chkJackpot(pick, winningTkt):
             print("YOU WON THE JACKPOT")
@@ -138,20 +154,27 @@ def chk_ticket(myTkt, winningTkt):
             powerball = chkPowerball(pick, winningTkt[1])
             matches = chkBallMatches(pick, winningTkt)
             print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
-              "winnings: $" + str(winnings(len(matches), powerball)))
+              "winnings: $" + str(payouts[(len(matches), powerball)]))
             winnings = payouts[(len(matches), powerball)]
-    return )
+    return winnings
 
 def main():
     "Play the game..."
     # Set game parameters:
     budget = getIntValue("How much money do you have to gamble? ")
-    plays = getIntValue("How many games do you want to play?: ")
-    powerplay = getBoolValue("Do you want to use the 'Powerplay'?: ") and 1 or 0
-    # Play the game play budget supports it:
-    While (playcost + powerplay) * plays < budget:
+    while budget > 0:
+        plays = getIntValue("How many games do you want to play?: ")
+        powerplay = getBoolValue("Do you want to use the 'Powerplay'?: ") and 1 or 0
+        # Play the game if you have the money:
+        playcost = (PLAYCOST + (PPLAYCOST * powerplay)) * plays
+        print("It will cost ${} to play...".format(playcost))
+        if budget < playcost:
+            print("...and with ${} you can't afford it.".format(budget))
+            print("Good Bye!")
+            exit()
         # get a lottery ticket...
-        myplays = getTicket(getIntValue("How many games would you like to play?: "))
+        #myplays = getTicket(getIntValue("How many plays on this ticket?: "))
+        myplays = getTicket(plays)
         showTkt(myplays)
         # do the lottery drawing...
         winningTkt = set(get_white_balls()), get_Powerball()
@@ -159,9 +182,9 @@ def main():
         # check ticket against drawing...
         winnings = chk_ticket(myplays, winningTkt)
         # report accounting ...
-        budget += winnings - (playcost + powerplay) * plays
-        if getBoolValue("You have {} dollars left. Keep Playing?: ".format(budget)):
-            exit()
+        budget += winnings - (playcost)
+        print("You won ${}".format(winnings))
+        print("You have {} dollars left.".format(budget))
     return
 
 if __name__ == "__main__":
@@ -170,17 +193,17 @@ if __name__ == "__main__":
     main()
 
 ## Lottery Game Simulation
-----------------------------
+#----------------------------
 # -- Game Play --
 # set a budget ==> budget
 # Create your tickets:
-------------------------
+#------------------------
 #   get number of plays desired:
 #   for each play:
 #       enter your own numbers and powerball or generate random ticket:
 #   calculate cost:
 #       choose powerplay and number of drawings
-#       cost = (costPerPlay + powerplay) * len(ticket) * drawings
+#       cost = (costPerPlay + pow-erplay) * len(ticket) * drawings
 #  budget -= cost
 #
 # While budget > 0:

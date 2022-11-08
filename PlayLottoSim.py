@@ -59,7 +59,7 @@ def getTicket(plays = 1):
 def showTkt(mypicks):
     "display current ticket"
     for play in mypicks:
-        print("Balls:{:<24s} Powerball:{}".format(str(sorted(list(play[0]))), play[1]))
+        print("Balls:{:<20s} Powerball:{}".format(str(sorted(list(play[0]))), play[1]))
     return
 
 def chk_ticket(myTkt, winningTkt):

@@ -16,17 +16,84 @@ Match 0 + PB	    $4	        1 in 38
 The overall odds of winning a Powerball prize are approximately 1 in 24.9
 
 """
-from lottoNumbers import *
-from chkLottoPick import *
+#from lottoNumbers import *
+#from chkLottoPick import *
+import random
 
-# -- Parameters --:
-# RandomBallRange ==> 1-69
-# NumberBalls ==> 5
-# PowerBallRange == 1-26
-# PowerPlayCost ==> 1
-##======================== No changes beneath this line =====================
-# -- Game Play --
-# set a budget ==> budget
+#-- PARAMETERS --
+BALLS = 5
+LO = 1
+HI = 69
+PBMAX = 26
+PowerPlayCost = 1
+
+JACKPOT = 1900000000
+PAYOUTS = {
+    (5, True): JACKPOT,
+    (5, False): 1000000,
+    (4, True): 50000,
+    (4, False): 100,
+    (3, True): 100,
+    (3, False): 7,
+    (2, True): 7,
+    (1, True): 4,
+    (0, True): 4,
+    (2, False): 0,
+    (1, False): 0,
+    (0, False): 0,
+}
+
+##======================== No value changes beneath this line =====================
+## --- MODEL ---
+# These functions create and populate the objects for this program
+
+def get_white_balls(balls = BALLS, lo = LO, hi = HI):
+    "returns the number of requested random balls in the range specified"
+    whiteBalls = set([])
+    while len(whiteBalls) < balls:
+        x = get_ball_value(lo, hi)
+        try:
+            whiteBalls.add(x)
+            #print(x)
+        except:
+            pass
+    return whiteBalls
+
+def get_Powerball(lo = LO, hi = PBMAX):
+    "return a powerball in the given range"
+    return get_ball_value(lo, hi)
+
+def getIntValue(query):
+    "return an integer value for a request with rejection of no values entered"
+    value = None
+    while not value:
+        value = True and 0 or input("%s: " % query)
+    return int(value)
+
+def getBoolValue(query):
+    "return a boolean value for the request with 'False' returned for no entry"
+    value = True and input(query).lower() in ['y', 'yes'] or False
+    return value
+
+## --- CONTROLLER ---
+# these functions evaluate and manipulate user input
+
+def chkJackpot(myTkt, winningTkt):
+    "quick check for jackpot win"
+    return myTkt == winningTkt
+
+def chkPowerball(myball, powerball):
+    "check for powerball match"
+    return myball == powerball
+
+def chkBallMatches(mypicks, whiteballs):
+    "check ticket for ball matches"
+    return mypicks[0].intersection(whiteballs[0])
+
+def winnings(matches, powerball):
+    "return results of matches"
+    payouts = PAYOUTS
+    return payouts[(matches, powerball)]
 
 def getPicks(balls = BALLS, hi = HI):
     "return set # of ball values in defined range"
@@ -41,17 +108,15 @@ def getPicks(balls = BALLS, hi = HI):
             print("Your value is not in the range 1 - %s. Please try again..." % hi)
     return picks
 
+## --- VIEW ---
+# These functions accept user input and display results
 def getTicket(plays = 1):
-    "generate a lottery ticket; default 5 plays"
+    "generate a lottery ticket with number of plays"
     mypicks = []
     while plays:
         print("%s plays left.." % plays)
         picks = getPicks()
-        #picks = input("enter list of 5 non-repeating numbers between 1 and 69: ")
-        #picks = picks and set(eval(picks)) or get_white_balls()
         pball = getIntValue("enter a powerball value between 1 and 26: ")
-        #pball = input("enter a powerball value between 1 and 26: ")
-        #pball = pball and int(pball) or get_Powerball()
         mypicks.append([picks, pball])
         plays -= 1
     return mypicks
@@ -70,33 +135,34 @@ def chk_ticket(myTkt, winningTkt):
         matches = chkBallMatches(pick, winningTkt)
         print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
               "winnings: $" + str(winnings(len(matches), powerball)))
+    return winnings(len(matches), powerball))
+
+def main():
+    "Play the game..."
+    # Set game parameters:
+    budget = getIntValue("How much money do you have to gamble? ")
+    plays = getIntValue("How many games do you want to play?: ")
+    powerplay = getBoolValue("Do you want to use the 'Powerplay'?: ") and 1 or 0
+    # Play the game play budget supports it:
+    While (playcost + powerplay) * plays < budget:
+        # get a lottery ticket...
+        myplays = getTicket(getIntValue("How many games would you like to play?: "))
+        showTkt(myplays)
+        # do the lottery drawing...
+        winningTkt = set(get_white_balls()), get_Powerball()
+        print("Drawing Result: ", winningTkt)
+        # check ticket against drawing...
+        winnings = chk_ticket(myplays, winningTkt)
+        # report accounting ...
+        budget += winnings - (playcost + powerplay) * plays
+        if getBoolValue("You have {} dollars left. Keep Playing?: ".format(budget)):
+            exit()
     return
-
-def getIntValue(query):
-    "return an integer value for a request with rejection of no values entered"
-    value = None
-    while not value:
-        value = True and 0 or input("%s: " % query)
-    return int(value)
-
-def getBoolValue(query):
-    "return a boolean value for the request with 'False' returned for no entry"
-    value = True and input(query).lower() in ['y', 'yes'] or False
-    return value
 
 if __name__ == "__main__":
     "play the Powerball Lottery"
-    budget = getValue("How much money do you have to gamble? ")
-    plays = getValue("How many games do you want to play?: ")
-    powerplay = getBoolValue("Do you want to use the 'Powerplay'?: ") and 1 or 0
-    if (playcost + powerplay) * plays < budget:
-
-
-    myplays = getTicket()
-    showTkt(myplays)
-    winningTkt = set(get_white_balls()), get_Powerball()
-    print("Drawing Result: ", winningTkt)
-    chk_ticket(myplays, winningTkt)
+    # -- Game Play --
+    main()
 
 ## Lottery Game Simulation
 ----------------------------

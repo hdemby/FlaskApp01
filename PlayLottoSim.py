@@ -88,7 +88,6 @@ def chkJackpot(myTkt, winningTkt):
 
 def chkPowerball(myball, powerball):
     "check for powerball match"
-    print(myball,powerball)
     return myball == powerball
 
 def chkBallMatches(mypicks, whiteballs):
@@ -147,16 +146,15 @@ def chk_ticket(myTkt, winningTkt):
     winnings = 0
     for pick in myTkt:
         if chkJackpot(pick, winningTkt):
-            print("**** YOU WON THE JACKPOT ***")
             winnings = payouts[(5, True)]
-            print("YOU WON ${} DOLLARS!!! CONGRATULATIONS!!!".format(winnings))
+            print("**** CONGRATULATIONS!!! YOU HIT THE JACKPOT!!!")
             break
         else:
             powerball = chkPowerball(pick[1], winningTkt[1])
             matches = chkBallMatches(pick, winningTkt)
             print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
               "winnings: $" + str(payouts[(len(matches), powerball)]))
-            winnings = payouts[(len(matches), powerball)]
+            winnings += payouts[(len(matches), powerball)]
     return winnings
 
 def main():
@@ -196,8 +194,18 @@ if __name__ == "__main__":
 ## Lottery Game Simulation
 #----------------------------
 # -- Game Play --
+## Create your tickets:
+# myplays = [[{6, 15, 23, 27, 62}, 1], [{34, 6, 9, 14, 19}, 24], [{2, 6, 50, 19, 27}, 10], \
+#   [{34, 15, 25, 27, 62}, 8], [{5, 10, 47, 48, 28}, 12]]
+## Get drawing result:
+# winningTkt = set([10,33,41,47,56]), 10
+
+winnings = chk_ticket(myplays, winningTkt)
+
+if winnings > 0:
+	print("Congratulations!!! You have won ${} dollars!".format(winnings))
 # set a budget ==> budget
-# Create your tickets:
+
 #------------------------
 #   get number of plays desired:
 #   for each play:

@@ -28,7 +28,7 @@ PBMAX = 27
 PLAYCOST = 2
 PPLAYCOST = 1
 
-JACKPOT = 1900000000
+JACKPOT = 2040000000
 PAYOUTS = {
     (5, True): JACKPOT,
     (5, False): 1000000,
@@ -51,10 +51,9 @@ def get_ball_value(lo = LO, hi = HI):
     "return a random number in the specified range"
     return random.randint(lo, hi)
 
-
 def get_white_balls(balls = BALLS, lo = LO, hi = HI):
     "returns the number of requested random balls in the range specified"
-    whiteBalls = set([])
+    whiteBalls = set()
     while len(whiteBalls) < balls:
         x = get_ball_value(lo, hi)
         try:
@@ -85,10 +84,11 @@ def getBoolValue(query):
 
 def chkJackpot(myTkt, winningTkt):
     "quick check for jackpot win"
-    return myTkt == winningTkt
+    return myTkt == list(winningTkt)
 
 def chkPowerball(myball, powerball):
     "check for powerball match"
+    print(myball,powerball)
     return myball == powerball
 
 def chkBallMatches(mypicks, whiteballs):
@@ -130,9 +130,8 @@ def getTicket(plays = 1):
     mypicks = []
     while plays:
         print("%s plays left.." % plays)
-        picks = getPicks()
-        pball = getPBall()
-        mypicks.append([picks, pball])
+        pick = set(getPicks()), getPBall()
+        mypicks.append(pick)
         plays -= 1
     return mypicks
 
@@ -148,10 +147,12 @@ def chk_ticket(myTkt, winningTkt):
     winnings = 0
     for pick in myTkt:
         if chkJackpot(pick, winningTkt):
-            print("YOU WON THE JACKPOT")
+            print("**** YOU WON THE JACKPOT ***")
             winnings = payouts[(5, True)]
+            print("YOU WON ${} DOLLARS!!! CONGRATULATIONS!!!".format(winnings))
+            break
         else:
-            powerball = chkPowerball(pick, winningTkt[1])
+            powerball = chkPowerball(pick[1], winningTkt[1])
             matches = chkBallMatches(pick, winningTkt)
             print(matches and "matches: %s, " % matches or "No matches, ", powerball and "Powerball, " or "No Powerball, ", \
               "winnings: $" + str(payouts[(len(matches), powerball)]))
